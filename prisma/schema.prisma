@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  cpf      String
+  email    String @unique
+  password String
+
+  wishlists Wishlist[]
+  sales     Sale[]
+
+  @@map("users")
+}
+
+model Product {
+  id          String @id @default(uuid())
+  name        String
+  price       Float
+  stock       Int
+  description String
+
+  categories ProductsOnCategories[]
+  wishlists  ProductsOnWishlists[]
+  sales      ProductsOnSales[]
+
+  @@map("products")
+}
+
+model Category {
+  id   String @id @default(uuid())
+  name String
+
+  products ProductsOnCategories[]
+
+  @@map("categories")
+}
+
+model Wishlist {
+  id      String @id @default(uuid())
+  name    String
+  user_id String
+
+  user     User                  @relation(fields: [user_id], references: [id])
+  products ProductsOnWishlists[]
+
+  @@map("wishlists")
+}
+
+model Sale {
+  id           String   @id @default(uuid())
+  payment_date DateTime
+  user_id      String
+
+  user     User              @relation(fields: [user_id], references: [id])
+  products ProductsOnSales[]
+
+  @@map("sales")
+}
+
+model ProductsOnCategories {
+  category_id String
+  product_id  String
+
+  category Category @relation(fields: [category_id], references: [id])
+  product  Product  @relation(fields: [product_id], references: [id])
+
+  @@id([category_id, product_id])
+  @@map("products_on_categories")
+}
+
+model ProductsOnWishlists {
+  wishlist_id String
+  product_id  String
+
+  wishlist Wishlist @relation(fields: [wishlist_id], references: [id])
+  product  Product  @relation(fields: [product_id], references: [id])
+
+  @@id([wishlist_id, product_id])
+  @@map("products_on_wishlists")
+}
+
+model ProductsOnSales {
+  sale_id    String
+  product_id String
+
+  sale    Sale    @relation(fields: [sale_id], references: [id])
+  product Product @relation(fields: [product_id], references: [id])
+
+  @@id([sale_id, product_id])
+  @@map("products_on_sales")
+}
