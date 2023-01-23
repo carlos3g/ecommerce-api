@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 import { Product } from '../entities';
 
@@ -16,4 +16,8 @@ export class CreateProductDto implements Omit<Product, 'id'> {
   @IsString()
   @IsNotEmpty()
   public description: string;
+
+  @IsArray()
+  @IsOptional()
+  public categories_id?: string[];
 }
