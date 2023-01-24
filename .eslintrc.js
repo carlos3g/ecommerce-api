@@ -32,6 +32,12 @@ module.exports = {
     'class-methods-use-this': 0,
     '@typescript-eslint/no-empty-interface': 0,
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    '@typescript-eslint/no-misused-promises': [
+      'error',
+      {
+        checksVoidReturn: false,
+      },
+    ],
     '@typescript-eslint/no-unused-vars': [
       0,
       {
